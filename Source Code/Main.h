@@ -6,3 +6,12 @@
 #include <math.h>
 
 using namespace std;
+
+struct projectile
+{
+	sf::Vector2f currentPos;
+	sf::CircleShape render;
+	int velocity;
+	int angle;
+	sf::Color bulletColor;
+};

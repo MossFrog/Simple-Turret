@@ -34,39 +34,52 @@ int main()
 
 	int barrelAngle = 0;
 
-	vector<sf::RectangleShape> projectileVector;
+	vector<projectile> projectileVector;
 
 	//--------------------------//
 
 	//-- Main Game Loop --//
 	while (mainWindow.isOpen())
 	{
-		//-- Event Methods --//
-		sf::Event event;
-		while (mainWindow.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				mainWindow.close();
-
-			if (event.key.code == sf::Keyboard::Down)
-			{
-				barrelAngle += 5;
-				barrel.setRotation(barrelAngle);
-			}
-
-			if (event.key.code == sf::Keyboard::Up)
-			{
-				barrelAngle -= 5;
-				barrel.setRotation(barrelAngle);
-			}
-		}
-
 		//-- Get the mouse position --//
 		sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow);
 
 		//-- Calculate the delta between the mouse and the origin --//
 		double deltaX = mousePos.x - turretBase.getPosition().x;
 		double deltaY = mousePos.y - turretBase.getPosition().y;
+
+		//-- Event Methods --//
+		sf::Event event;
+		while (mainWindow.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				mainWindow.close();
+		}
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			projectile newBullet;
+			newBullet.currentPos = turretBase.getPosition();
+			newBullet.bulletColor = sf::Color::Red;
+			newBullet.angle = (atan2(deltaY, deltaX) * 180.0 / PI);
+			newBullet.render = sf::CircleShape(4);
+			newBullet.render.setOrigin(2, 2);
+			newBullet.render.setFillColor(newBullet.bulletColor);
+			newBullet.velocity = 3;
+
+			projectileVector.push_back(newBullet);
+		}
+
+		//-- Update all the bullet positions --//
+		for (int i = 0; i < projectileVector.size(); i++)
+		{
+			projectileVector[i].currentPos = sf::Vector2f(projectileVector[i].currentPos.x + cos(projectileVector[i].angle*(0.017))*projectileVector[i].velocity,
+				projectileVector[i].currentPos.y + sin(projectileVector[i].angle*(0.017))*projectileVector[i].velocity);
+
+			projectileVector[i].render.setPosition(projectileVector[i].currentPos);
+
+
+		}
 
 		//-- Update the barrel rotation --//
 		barrelAngle = (atan2(deltaY, deltaX) * 180.0 / PI);
@@ -75,7 +88,12 @@ int main()
 		mainWindow.clear(sf::Color::Black);
 
 		mainWindow.draw(turretBase);
+		for (int i = 0; i < projectileVector.size(); i++)
+		{
+			mainWindow.draw(projectileVector[i].render);
+		}
 		mainWindow.draw(barrel);
+
 
 		mainWindow.display();
 
