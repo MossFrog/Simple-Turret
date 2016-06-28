@@ -78,6 +78,17 @@ int main()
 
 			projectileVector[i].render.setPosition(projectileVector[i].currentPos);
 
+			//-- If the bullet position is out of the bounds of the render window then delete it --//
+			if (projectileVector[i].currentPos.x > 1024 || projectileVector[i].currentPos.x < 0)
+			{
+				projectileVector.erase(projectileVector.begin() + i);
+			}
+
+			else if (projectileVector[i].currentPos.y > 700 || projectileVector[i].currentPos.y < 0)
+			{
+				projectileVector.erase(projectileVector.begin() + i);
+			}
+
 
 		}
 
