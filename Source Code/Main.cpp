@@ -13,7 +13,7 @@ int main()
 	
 
 	//-- Disable Key Repetition to enable button pressed events. --//
-	//mainWindow.setKeyRepeatEnabled(false);
+	mainWindow.setKeyRepeatEnabled(false);
 
 	//--------------------------//
 	//-- Declarations Sections --//
@@ -48,6 +48,10 @@ int main()
 		double deltaX = mousePos.x - turretBase.getPosition().x;
 		double deltaY = mousePos.y - turretBase.getPosition().y;
 
+		//-- Update the barrel rotation --//
+		barrelAngle = (atan2(deltaY, deltaX) * 180.0 / PI);
+		barrel.setRotation(barrelAngle);
+
 		//-- Event Methods --//
 		sf::Event event;
 		while (mainWindow.pollEvent(event))
@@ -61,11 +65,11 @@ int main()
 			projectile newBullet;
 			newBullet.currentPos = turretBase.getPosition();
 			newBullet.bulletColor = sf::Color::Red;
-			newBullet.angle = (atan2(deltaY, deltaX) * 180.0 / PI);
+			newBullet.angle = barrelAngle;
 			newBullet.render = sf::CircleShape(4);
-			newBullet.render.setOrigin(2, 2);
+			newBullet.render.setOrigin(4,4);
 			newBullet.render.setFillColor(newBullet.bulletColor);
-			newBullet.velocity = 3;
+			newBullet.velocity = 7;
 
 			projectileVector.push_back(newBullet);
 		}
@@ -73,8 +77,8 @@ int main()
 		//-- Update all the bullet positions --//
 		for (int i = 0; i < projectileVector.size(); i++)
 		{
-			projectileVector[i].currentPos = sf::Vector2f(projectileVector[i].currentPos.x + cos(projectileVector[i].angle*(0.017))*projectileVector[i].velocity,
-				projectileVector[i].currentPos.y + sin(projectileVector[i].angle*(0.017))*projectileVector[i].velocity);
+			projectileVector[i].currentPos = sf::Vector2f(projectileVector[i].currentPos.x + cos(projectileVector[i].angle*(0.01750))*projectileVector[i].velocity,
+				projectileVector[i].currentPos.y + sin(projectileVector[i].angle*(0.01750))*projectileVector[i].velocity);
 
 			projectileVector[i].render.setPosition(projectileVector[i].currentPos);
 
@@ -91,10 +95,6 @@ int main()
 
 
 		}
-
-		//-- Update the barrel rotation --//
-		barrelAngle = (atan2(deltaY, deltaX) * 180.0 / PI);
-		barrel.setRotation(barrelAngle);
 
 		mainWindow.clear(sf::Color::Black);
 
