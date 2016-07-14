@@ -10,8 +10,6 @@ int main()
 	sf::RenderWindow mainWindow(sf::VideoMode(1024, 700), "Turet Demo", sf::Style::Close, settings);
 	mainWindow.setFramerateLimit(120);
 
-	
-
 	//-- Disable Key Repetition to enable button pressed events. --//
 	mainWindow.setKeyRepeatEnabled(false);
 
@@ -36,7 +34,11 @@ int main()
 
 	vector<projectile> projectileVector;
 
+	sf::Clock fireClock;
+	int fireRate = 0;
+
 	//--------------------------//
+	fireClock.restart();
 
 	//-- Main Game Loop --//
 	while (mainWindow.isOpen())
@@ -58,20 +60,36 @@ int main()
 		{
 			if (event.type == sf::Event::Closed)
 				mainWindow.close();
+
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::Space)
+				{
+					fireRate += 10;
+				}
+			}
 		}
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			projectile newBullet;
-			newBullet.currentPos = turretBase.getPosition();
-			newBullet.bulletColor = sf::Color::Red;
-			newBullet.angle = barrelAngle;
-			newBullet.render = sf::CircleShape(4);
-			newBullet.render.setOrigin(4,4);
-			newBullet.render.setFillColor(newBullet.bulletColor);
-			newBullet.velocity = 7;
+			cout << fireClock.getElapsedTime().asMilliseconds() << endl;
+			//-- If the mouse button is pressed and the turret timer is ready add a new bullet to the projectile Vector --//
 
-			projectileVector.push_back(newBullet);
+			if (fireClock.getElapsedTime().asMilliseconds() >= 100-fireRate)
+			{
+				projectile newBullet;
+				newBullet.currentPos = turretBase.getPosition();
+				newBullet.bulletColor = sf::Color::Red;
+				newBullet.angle = barrelAngle;
+				newBullet.render = sf::CircleShape(4);
+				newBullet.render.setOrigin(4, 4);
+				newBullet.render.setFillColor(newBullet.bulletColor);
+				newBullet.velocity = 7;
+
+				projectileVector.push_back(newBullet);
+
+				fireClock.restart();
+			}
 		}
 
 		//-- Update all the bullet positions --//
