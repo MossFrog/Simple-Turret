@@ -15,3 +15,11 @@ struct projectile
 	int angle;
 	sf::Color bulletColor;
 };
+
+struct enemy
+{
+	sf::Vector2f currentPos;
+	sf::CircleShape render;
+	int speed;
+	int health;
+};

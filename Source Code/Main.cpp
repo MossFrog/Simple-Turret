@@ -33,12 +33,24 @@ int main()
 	int barrelAngle = 0;
 
 	vector<projectile> projectileVector;
+	vector<enemy> enemyVector;
+
+	sf::Clock enemySpawnClock;
 
 	sf::Clock fireClock;
 	int fireRate = 0;
 
 	//--------------------------//
+
+	//-- Audio Section --//
+	sf::SoundBuffer shotBuffer;
+	shotBuffer.loadFromFile("Shoot.wav");
+
+	sf::Sound shotSound;
+	shotSound.setBuffer(shotBuffer);
+
 	fireClock.restart();
+	enemySpawnClock.restart();
 
 	//-- Main Game Loop --//
 	while (mainWindow.isOpen())
@@ -72,10 +84,9 @@ int main()
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			cout << fireClock.getElapsedTime().asMilliseconds() << endl;
 			//-- If the mouse button is pressed and the turret timer is ready add a new bullet to the projectile Vector --//
 
-			if (fireClock.getElapsedTime().asMilliseconds() >= 100-fireRate)
+			if (fireClock.getElapsedTime().asMilliseconds() >= 300-fireRate+100)
 			{
 				projectile newBullet;
 				newBullet.currentPos = turretBase.getPosition();
@@ -87,6 +98,8 @@ int main()
 				newBullet.velocity = 7;
 
 				projectileVector.push_back(newBullet);
+
+				shotSound.play();
 
 				fireClock.restart();
 			}
@@ -114,12 +127,38 @@ int main()
 
 		}
 
+		cout << enemySpawnClock.getElapsedTime().asMilliseconds() << endl;
+
+		//-- Spawn a new enemy --//
+		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= 5000)
+		{
+			enemy newEnemy;
+			newEnemy.currentPos = sf::Vector2f(1500, 350);
+			newEnemy.render.setPosition(newEnemy.currentPos);
+			newEnemy.render.setRadius(15);
+			newEnemy.render.setFillColor(sf::Color::Magenta);
+			enemyVector.push_back(newEnemy);
+			enemySpawnClock.restart();
+		}
+
+		for (int i = 0; i < enemyVector.size(); i++)
+		{
+			enemyVector[i].currentPos.x -= 2;
+			enemyVector[i].render.setPosition(enemyVector[i].currentPos);
+		}
+
+
 		mainWindow.clear(sf::Color::Black);
 
 		mainWindow.draw(turretBase);
 		for (int i = 0; i < projectileVector.size(); i++)
 		{
 			mainWindow.draw(projectileVector[i].render);
+		}
+
+		for (int i = 0; i < enemyVector.size(); i++)
+		{
+			mainWindow.draw(enemyVector[i].render);
 		}
 		mainWindow.draw(barrel);
 
