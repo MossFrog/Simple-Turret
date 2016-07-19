@@ -40,6 +40,9 @@ int main()
 	sf::Clock fireClock;
 	int fireRate = 0;
 
+	//-- Random Generation Elements --//
+	RandGen newRandGen;
+
 	//--------------------------//
 
 	//-- Audio Section --//
@@ -127,18 +130,20 @@ int main()
 
 		}
 
-		cout << enemySpawnClock.getElapsedTime().asMilliseconds() << endl;
 
 		//-- Spawn a new enemy --//
-		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= 5000)
+		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= 50)
 		{
 			enemy newEnemy;
-			newEnemy.currentPos = sf::Vector2f(1500, 350);
+
+			newEnemy.currentPos = randomSpawnPos();
 			newEnemy.render.setPosition(newEnemy.currentPos);
 			newEnemy.render.setRadius(15);
 			newEnemy.render.setFillColor(sf::Color::Magenta);
 			enemyVector.push_back(newEnemy);
 			enemySpawnClock.restart();
+
+			cout << "Spawned Enemy at: " << newEnemy.currentPos.x << "," << newEnemy.currentPos.y << endl;
 		}
 
 		for (int i = 0; i < enemyVector.size(); i++)
@@ -146,7 +151,6 @@ int main()
 			enemyVector[i].currentPos.x -= 2;
 			enemyVector[i].render.setPosition(enemyVector[i].currentPos);
 		}
-
 
 		mainWindow.clear(sf::Color::Black);
 
