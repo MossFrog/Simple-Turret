@@ -36,7 +36,7 @@ int main()
 	sf::Clock enemySpawnClock;
 
 	sf::Clock fireClock;
-	int fireRate = 0;
+	int fireRate = 500;
 
 	//-- Random Generation Elements --//
 	RandGen newRandGen;
@@ -97,6 +97,11 @@ int main()
 				newBullet.render.setOrigin(4, 4);
 				newBullet.render.setFillColor(newBullet.bulletColor);
 				newBullet.velocity = 7;
+
+				//-- Push the bullet to end of the barrel --//
+				newBullet.currentPos = sf::Vector2f(newBullet.currentPos.x + cos(newBullet.angle*(0.01750)) * 95,
+					newBullet.currentPos.y + sin(newBullet.angle*(0.01750)) * 95);
+
 
 				projectileVector.push_back(newBullet);
 
@@ -164,8 +169,6 @@ int main()
 		mainWindow.draw(turretBase);
 		for (int i = 0; i < projectileVector.size(); i++)
 		{
-			sf::Vector2f direction = (enemyVector[i].currentPos - turretBase.getPosition());
-			enemyVector[i].currentPos = direction;
 			mainWindow.draw(projectileVector[i].render);
 		}
 
