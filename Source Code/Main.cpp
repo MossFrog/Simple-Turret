@@ -16,8 +16,6 @@ int main()
 	//--------------------------//
 	//-- Declarations Sections --//
 
-	double PI = 3.14;
-
 	//-- The variable is defined with its diameter --//
 	sf::CircleShape turretBase(36);
 	turretBase.setOrigin(36,36);
@@ -126,8 +124,6 @@ int main()
 			{
 				projectileVector.erase(projectileVector.begin() + i);
 			}
-
-
 		}
 
 
@@ -140,15 +136,20 @@ int main()
 			newEnemy.render.setPosition(newEnemy.currentPos);
 			newEnemy.render.setRadius(15);
 			newEnemy.render.setFillColor(sf::Color::Magenta);
+			newEnemy.speed = 2;
+
+			double distance = sqrt(pow((newEnemy.currentPos.x - turretBase.getPosition().x), 2) + pow((newEnemy.currentPos.y - turretBase.getPosition().y), 2));
+			double xSpeed = (newEnemy.currentPos.x - turretBase.getPosition().x) / distance;
+			double ySpeed = (newEnemy.currentPos.y - turretBase.getPosition().y) / distance;
+
+			newEnemy.direction = sf::Vector2f(xSpeed, ySpeed);
 			enemyVector.push_back(newEnemy);
 			enemySpawnClock.restart();
-
-			cout << "Spawned Enemy at: " << newEnemy.currentPos.x << "," << newEnemy.currentPos.y << endl;
 		}
 
 		for (int i = 0; i < enemyVector.size(); i++)
 		{
-			enemyVector[i].currentPos.x -= 2;
+			enemyVector[i].currentPos = enemyVector[i].currentPos - enemyVector[i].direction;
 			enemyVector[i].render.setPosition(enemyVector[i].currentPos);
 		}
 
@@ -157,6 +158,8 @@ int main()
 		mainWindow.draw(turretBase);
 		for (int i = 0; i < projectileVector.size(); i++)
 		{
+			sf::Vector2f direction = (enemyVector[i].currentPos - turretBase.getPosition());
+			enemyVector[i].currentPos = direction;
 			mainWindow.draw(projectileVector[i].render);
 		}
 

@@ -4,9 +4,12 @@
 #include <SFML/OpenGL.hpp>
 #include <vector>
 #include <math.h>
+#include <cmath>
 #include "randgen.h"
 
 using namespace std;
+
+#define PI 3.14159265
 
 struct projectile
 {
@@ -23,6 +26,7 @@ struct enemy
 	sf::CircleShape render;
 	int speed;
 	int health;
+	sf::Vector2f direction;
 };
 
 sf::Vector2f randomSpawnPos()
@@ -31,7 +35,7 @@ sf::Vector2f randomSpawnPos()
 	RandGen randPole;
 	RandGen randX;
 	RandGen randY;
-	int pole = randPole.RandInt(3);
+	int pole = randPole.RandInt(4);
 
 	//-- Spawn Creatures at different Poles (N,S,E,W) --//
 	if (pole == 0)
@@ -72,7 +76,3 @@ sf::Vector2f randomSpawnPos()
 	return resultPos;
 }
 
-void enemyMove(int speed, sf::Vector2f & currentPos)
-{
-
-}
