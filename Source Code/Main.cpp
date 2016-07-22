@@ -128,7 +128,7 @@ int main()
 
 
 		//-- Spawn a new enemy --//
-		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= 50)
+		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= 3000)
 		{
 			enemy newEnemy;
 
@@ -137,10 +137,12 @@ int main()
 			newEnemy.render.setRadius(15);
 			newEnemy.render.setFillColor(sf::Color::Magenta);
 			newEnemy.speed = 2;
+			newEnemy.render.setOrigin(15, 15);
 
+			//-- We calculate each enemies xSpeed and ySpeed and then normalize it against the distance to set the speed to a constant value of 1 --//
 			double distance = sqrt(pow((newEnemy.currentPos.x - turretBase.getPosition().x), 2) + pow((newEnemy.currentPos.y - turretBase.getPosition().y), 2));
-			double xSpeed = (newEnemy.currentPos.x - turretBase.getPosition().x) / distance;
-			double ySpeed = (newEnemy.currentPos.y - turretBase.getPosition().y) / distance;
+			double xSpeed = (newEnemy.currentPos.x - turretBase.getPosition().x) / distance * newEnemy.speed;
+			double ySpeed = (newEnemy.currentPos.y - turretBase.getPosition().y) / distance * newEnemy.speed;
 
 			newEnemy.direction = sf::Vector2f(xSpeed, ySpeed);
 			enemyVector.push_back(newEnemy);
@@ -149,7 +151,11 @@ int main()
 
 		for (int i = 0; i < enemyVector.size(); i++)
 		{
-			enemyVector[i].currentPos = enemyVector[i].currentPos - enemyVector[i].direction;
+			double currentDistance = sqrt(pow((enemyVector[i].currentPos.x - turretBase.getPosition().x), 2) + pow((enemyVector[i].currentPos.y - turretBase.getPosition().y), 2));
+			if (currentDistance > 20)
+			{
+				enemyVector[i].currentPos = enemyVector[i].currentPos - enemyVector[i].direction;
+			}
 			enemyVector[i].render.setPosition(enemyVector[i].currentPos);
 		}
 

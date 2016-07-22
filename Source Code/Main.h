@@ -27,6 +27,7 @@ struct enemy
 	int speed;
 	int health;
 	sf::Vector2f direction;
+	int type;
 };
 
 sf::Vector2f randomSpawnPos()
