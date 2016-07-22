@@ -36,7 +36,7 @@ int main()
 	sf::Clock enemySpawnClock;
 
 	sf::Clock fireClock;
-	int fireRate = 500;
+	int fireRate = 150;
 
 	//-- Random Generation Elements --//
 	RandGen newRandGen;
@@ -129,11 +129,22 @@ int main()
 			{
 				projectileVector.erase(projectileVector.begin() + i);
 			}
+
+			//-- Do a collision test with all enemies --//
+			for (int j = 0; j < enemyVector.size(); j++)
+			{
+				double tempDistance = sqrt(pow((enemyVector[j].currentPos.x - projectileVector[i].currentPos.x), 2) + pow((enemyVector[j].currentPos.y - projectileVector[i].currentPos.y), 2));
+				if (tempDistance < 15)
+				{
+					enemyVector.erase(enemyVector.begin() + j);
+				}
+			}
+
 		}
 
 
 		//-- Spawn a new enemy --//
-		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= 3000)
+		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= 500)
 		{
 			enemy newEnemy;
 
@@ -157,11 +168,12 @@ int main()
 		for (int i = 0; i < enemyVector.size(); i++)
 		{
 			double currentDistance = sqrt(pow((enemyVector[i].currentPos.x - turretBase.getPosition().x), 2) + pow((enemyVector[i].currentPos.y - turretBase.getPosition().y), 2));
-			if (currentDistance > 20)
+			if (currentDistance > 50)
 			{
 				enemyVector[i].currentPos = enemyVector[i].currentPos - enemyVector[i].direction;
 			}
 			enemyVector[i].render.setPosition(enemyVector[i].currentPos);
+
 		}
 
 		mainWindow.clear(sf::Color::Black);
