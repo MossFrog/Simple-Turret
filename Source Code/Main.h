@@ -77,3 +77,8 @@ sf::Vector2f randomSpawnPos()
 	return resultPos;
 }
 
+
+void randomEnemyType(enemy & spawnedEnemy)
+{
+
+}

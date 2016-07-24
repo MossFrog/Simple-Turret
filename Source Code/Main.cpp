@@ -39,7 +39,18 @@ int main()
 	int fireRate = 150;
 
 	//-- Random Generation Elements --//
-	RandGen newRandGen;
+
+	//-- Sprites and Textures --//
+
+	sf::Texture barrelTexure;
+	barrelTexure.loadFromFile("Barrel.png");
+
+	sf::Sprite barrelSprite;
+	barrelSprite.setTexture(barrelTexure);
+	barrelSprite.setScale(2, 2);
+	barrelSprite.setOrigin(17,41);
+	barrelSprite.setPosition(barrel.getPosition());
+
 
 	//--------------------------//
 
@@ -99,8 +110,8 @@ int main()
 				newBullet.velocity = 7;
 
 				//-- Push the bullet to end of the barrel --//
-				newBullet.currentPos = sf::Vector2f(newBullet.currentPos.x + cos(newBullet.angle*(0.01750)) * 95,
-					newBullet.currentPos.y + sin(newBullet.angle*(0.01750)) * 95);
+				newBullet.currentPos = sf::Vector2f(newBullet.currentPos.x + cos(newBullet.angle*(0.01750)) * 75,
+					newBullet.currentPos.y + sin(newBullet.angle*(0.01750)) * 75);
 
 
 				projectileVector.push_back(newBullet);
@@ -144,7 +155,7 @@ int main()
 
 
 		//-- Spawn a new enemy --//
-		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= 500)
+		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= 1000)
 		{
 			enemy newEnemy;
 
@@ -152,7 +163,7 @@ int main()
 			newEnemy.render.setPosition(newEnemy.currentPos);
 			newEnemy.render.setRadius(15);
 			newEnemy.render.setFillColor(sf::Color::Magenta);
-			newEnemy.speed = 2;
+			newEnemy.speed = 1;
 			newEnemy.render.setOrigin(15, 15);
 
 			//-- We calculate each enemies xSpeed and ySpeed and then normalize it against the distance to set the speed to a constant value of 1 --//
@@ -176,6 +187,8 @@ int main()
 
 		}
 
+		barrelSprite.setRotation(barrel.getRotation() + 90);
+
 		mainWindow.clear(sf::Color::Black);
 
 		mainWindow.draw(turretBase);
@@ -188,7 +201,10 @@ int main()
 		{
 			mainWindow.draw(enemyVector[i].render);
 		}
-		mainWindow.draw(barrel);
+
+		//-- Uncomment this section to render the barrel entity --//
+		//mainWindow.draw(barrel);
+		mainWindow.draw(barrelSprite);
 
 
 		mainWindow.display();
