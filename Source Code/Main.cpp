@@ -51,6 +51,14 @@ int main()
 	barrelSprite.setOrigin(17,41);
 	barrelSprite.setPosition(barrel.getPosition());
 
+	sf::Texture backGroundTexture;
+	backGroundTexture.loadFromFile("Terrain.PNG");
+
+	sf::Sprite backGroundSprite;
+	backGroundSprite.setTexture(backGroundTexture);
+	backGroundSprite.setScale(1.43, 1.4);
+	backGroundSprite.setPosition(-1, -1);
+
 
 	//--------------------------//
 
@@ -191,6 +199,8 @@ int main()
 
 		mainWindow.clear(sf::Color::Black);
 
+		mainWindow.draw(backGroundSprite);
+
 		mainWindow.draw(turretBase);
 		for (int i = 0; i < projectileVector.size(); i++)
 		{
@@ -205,6 +215,7 @@ int main()
 		//-- Uncomment this section to render the barrel entity --//
 		//mainWindow.draw(barrel);
 		mainWindow.draw(barrelSprite);
+		
 
 
 		mainWindow.display();

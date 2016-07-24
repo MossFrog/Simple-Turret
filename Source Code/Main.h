@@ -80,5 +80,6 @@ sf::Vector2f randomSpawnPos()
 
 void randomEnemyType(enemy & spawnedEnemy)
 {
-
+	RandGen randGenerator;
+	int type = randGenerator.RandInt(10);
 }
