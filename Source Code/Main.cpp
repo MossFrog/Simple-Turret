@@ -170,8 +170,9 @@ int main()
 			newEnemy.currentPos = randomSpawnPos();
 			newEnemy.render.setPosition(newEnemy.currentPos);
 			newEnemy.render.setRadius(15);
-			newEnemy.render.setFillColor(sf::Color::Magenta);
-			newEnemy.speed = 1;
+			
+			randomEnemyType(newEnemy);
+
 			newEnemy.render.setOrigin(15, 15);
 
 			//-- We calculate each enemies xSpeed and ySpeed and then normalize it against the distance to set the speed to a constant value of 1 --//

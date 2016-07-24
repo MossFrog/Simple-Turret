@@ -82,4 +82,25 @@ void randomEnemyType(enemy & spawnedEnemy)
 {
 	RandGen randGenerator;
 	int type = randGenerator.RandInt(10);
+
+	if (type < 4)
+	{
+		spawnedEnemy.health = 1;
+		spawnedEnemy.render.setFillColor(sf::Color::Green);
+		spawnedEnemy.speed = 2;
+	}
+
+	else if (type < 8)
+	{
+		spawnedEnemy.health = 3;
+		spawnedEnemy.render.setFillColor(sf::Color::Cyan);
+		spawnedEnemy.speed = 1;
+	}
+
+	else
+	{
+		spawnedEnemy.health = 1;
+		spawnedEnemy.render.setFillColor(sf::Color::Red);
+		spawnedEnemy.speed = 3;
+	}
 }
