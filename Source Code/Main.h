@@ -24,7 +24,7 @@ struct enemy
 {
 	sf::Vector2f currentPos;
 	sf::CircleShape render;
-	int speed;
+	double speed;
 	int health;
 	sf::Vector2f direction;
 	int type;
@@ -83,13 +83,15 @@ void randomEnemyType(enemy & spawnedEnemy)
 	RandGen randGenerator;
 	int type = randGenerator.RandInt(10);
 
-	if (type < 4)
+	//-- Green enemies are normal and have an average speed --//
+	if (type < 3)
 	{
-		spawnedEnemy.health = 1;
+		spawnedEnemy.health = 2;
 		spawnedEnemy.render.setFillColor(sf::Color::Green);
-		spawnedEnemy.speed = 2;
+		spawnedEnemy.speed = 1.5;
 	}
 
+	//-- Cyan enemies are slow but tanky --//
 	else if (type < 8)
 	{
 		spawnedEnemy.health = 3;
@@ -97,6 +99,7 @@ void randomEnemyType(enemy & spawnedEnemy)
 		spawnedEnemy.speed = 1;
 	}
 
+	//-- Red enemies are fast but squishy --//
 	else
 	{
 		spawnedEnemy.health = 1;

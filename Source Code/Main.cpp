@@ -38,9 +38,26 @@ int main()
 	sf::Clock fireClock;
 	int fireRate = 150;
 
+	//-- Player and Game Variables --//
+	int playerHealth = 100;
+	int playerBank = 0;
+	int playerDamage = 1;
+
+
+	int enemiesKilled = 0;
+
+	int gameState = 0;
+
+	/* //-- Game States --//
+	0 - Menu
+	1 - Playing
+	2 - Break
+	3 - Game Over
+	*/
+
 	//-- Random Generation Elements --//
 
-	//-- Sprites and Textures --//
+	//-- Sprites, Textures and Fonts --//
 
 	sf::Texture barrelTexure;
 	barrelTexure.loadFromFile("Barrel.png");
@@ -95,10 +112,7 @@ int main()
 
 			if (event.type == sf::Event::KeyPressed)
 			{
-				if (event.key.code == sf::Keyboard::Space)
-				{
-					fireRate += 10;
-				}
+
 			}
 		}
 
@@ -124,6 +138,7 @@ int main()
 
 				projectileVector.push_back(newBullet);
 
+				//-- Play the shooting sound --//
 				shotSound.play();
 
 				fireClock.restart();
@@ -155,7 +170,20 @@ int main()
 				double tempDistance = sqrt(pow((enemyVector[j].currentPos.x - projectileVector[i].currentPos.x), 2) + pow((enemyVector[j].currentPos.y - projectileVector[i].currentPos.y), 2));
 				if (tempDistance < 15)
 				{
-					enemyVector.erase(enemyVector.begin() + j);
+					//-- If a collision is detected remove the projectile and damage the enemy --//
+					//-- If the enemy health is zero or lower then also remove the enemy --//
+					enemyVector[j].health -= 1;
+
+					//-- Additional "Slowing" Effect --//
+					enemyVector[j].speed = enemyVector[j].speed * 0.5;
+
+					projectileVector.erase(projectileVector.begin() + i);
+
+					if (enemyVector[j].health <= 0)
+					{
+						enemyVector.erase(enemyVector.begin() + j);
+						enemiesKilled += 1;
+					}
 				}
 			}
 
@@ -163,7 +191,7 @@ int main()
 
 
 		//-- Spawn a new enemy --//
-		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= 1000)
+		if (enemySpawnClock.getElapsedTime().asMilliseconds() >= (1500 - (enemiesKilled*3)))
 		{
 			enemy newEnemy;
 
@@ -192,6 +220,20 @@ int main()
 			{
 				enemyVector[i].currentPos = enemyVector[i].currentPos - enemyVector[i].direction;
 			}
+
+			else if (currentDistance <= 50)
+			{
+				//-- In this case the enemy has reached the turret base, damage the player and remove the enemy --//
+				enemyVector.erase(enemyVector.begin() + i);
+				playerHealth -= 5;
+
+				if (playerHealth <= 0)
+				{
+					//-- Game over State --//
+					playerHealth = 0;
+				}
+			}
+
 			enemyVector[i].render.setPosition(enemyVector[i].currentPos);
 
 		}
@@ -215,14 +257,12 @@ int main()
 
 		//-- Uncomment this section to render the barrel entity --//
 		//mainWindow.draw(barrel);
+
 		mainWindow.draw(barrelSprite);
 		
-
-
 		mainWindow.display();
 
 	}
-
 
 	return 0;
 }
