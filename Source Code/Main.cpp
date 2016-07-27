@@ -76,6 +76,15 @@ int main()
 	backGroundSprite.setScale(1.24, 1.19);
 	backGroundSprite.setPosition(-1, -1);
 
+	sf::Texture turretBaseTexture;
+	turretBaseTexture.loadFromFile("TurretBase.png");
+
+	sf::Sprite turretBaseSprite;
+	turretBaseSprite.setTexture(turretBaseTexture);
+	turretBaseSprite.setOrigin(10, 10);
+	turretBaseSprite.setScale(3.6, 3.6);
+	turretBaseSprite.setPosition(512, 350);
+
 	sf::Font mainFont;
 	if (!mainFont.loadFromFile("monumentA.ttf"))
 	{
@@ -145,6 +154,35 @@ int main()
 			{
 
 			}
+		}
+
+		//-- Menu Buttons and Methods --//
+		if (startText.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 0)
+		{
+			startText.setColor(sf::Color::Yellow);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				gameState = 1;
+			}
+		}
+
+		else
+		{
+			startText.setColor(sf::Color::White);
+		}
+
+		if (highScoresText.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 0)
+		{
+			highScoresText.setColor(sf::Color::Yellow);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+
+			}
+		}
+
+		else
+		{
+			highScoresText.setColor(sf::Color::White);
 		}
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -283,7 +321,6 @@ int main()
 
 		if (gameState == 1)
 		{
-			mainWindow.draw(turretBase);
 			for (int i = 0; i < projectileVector.size(); i++)
 			{
 				mainWindow.draw(projectileVector[i].render);
@@ -295,9 +332,11 @@ int main()
 			}
 
 
-			//-- Uncomment this section to render the barrel entity --//
+			//-- Uncomment this section to render the barrel and base entity --//
 			//mainWindow.draw(barrel);
+			//mainWindow.draw(turretBase);
 
+			mainWindow.draw(turretBaseSprite);
 			mainWindow.draw(barrelSprite);
 		}
 
