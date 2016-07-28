@@ -28,6 +28,12 @@ int main()
 	barrel.setFillColor(sf::Color::Cyan);
 	barrel.setPosition(512, 350);
 
+	sf::RectangleShape healthBar;
+	healthBar.setSize(sf::Vector2f(200, 30));
+	healthBar.setFillColor(sf::Color::Green);
+	healthBar.setPosition(30, 30);
+
+
 	int barrelAngle = 0;
 
 	vector<projectile> projectileVector;
@@ -42,6 +48,7 @@ int main()
 	int playerHealth = 100;
 	int playerBank = 0;
 	int playerDamage = 1;
+	int playerScore = 0;
 
 
 	int enemiesKilled = 0;
@@ -116,6 +123,19 @@ int main()
 	highScoresText.setString("Highscores");
 	highScoresText.setPosition(300, 350);
 
+	sf::Text bankText;
+	bankText.setFont(mainFont);
+	bankText.setString("Bank: " + itoa(playerBank));
+	bankText.setPosition(790, 30);
+	bankText.setCharacterSize(40);
+
+	sf::Text scoreText;
+	scoreText.setFont(mainFont);
+	scoreText.setString("Score: " + itoa(playerScore));
+	scoreText.setPosition(30, 60);
+	scoreText.setCharacterSize(40);
+
+
 
 	//--------------------------//
 
@@ -142,6 +162,33 @@ int main()
 		//-- Update the barrel rotation --//
 		barrelAngle = (atan2(deltaY, deltaX) * 180.0 / PI);
 		barrel.setRotation(barrelAngle);
+
+		//-- Update the text elements --//
+		bankText.setString("Bank: " + itoa(playerBank));
+		scoreText.setString("Score: " + itoa(playerScore));
+
+		//-- Update the health bar --//
+		healthBar.setSize(sf::Vector2f(playerHealth * 2, 30));
+
+		if (playerHealth <= 25)
+		{
+			healthBar.setFillColor(sf::Color::Red);
+		}
+		else if (playerHealth <= 50)
+		{
+			healthBar.setFillColor(sf::Color::Yellow);
+		}
+		else if (playerHealth > 50)
+		{
+			healthBar.setFillColor(sf::Color::Green);
+		}
+
+
+		//-- Check if the player has perished in battle. --//
+		if (playerHealth <= 0)
+		{
+			gameState = 3;
+		}
 
 		//-- Event Methods --//
 		sf::Event event;
@@ -253,6 +300,26 @@ int main()
 
 						if (enemyVector[j].health <= 0)
 						{
+							if (enemyVector[j].type < 3)
+							{
+								playerBank += 15;
+								playerScore += 150;
+							}
+
+							//-- Cyan enemies are slow but tanky --//
+							else if (enemyVector[j].type < 8)
+							{
+								playerBank += 20;
+								playerScore += 250;
+							}
+
+							//-- Red enemies are fast but squishy --//
+							else
+							{
+								playerBank += 30;
+								playerScore += 350;
+							}
+
 							enemyVector.erase(enemyVector.begin() + j);
 							enemiesKilled += 1;
 						}
@@ -338,6 +405,10 @@ int main()
 
 			mainWindow.draw(turretBaseSprite);
 			mainWindow.draw(barrelSprite);
+
+			mainWindow.draw(bankText);
+			mainWindow.draw(healthBar);
+			mainWindow.draw(scoreText);
 		}
 
 		else if (gameState == 0)
