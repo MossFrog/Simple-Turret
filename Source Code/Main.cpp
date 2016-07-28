@@ -44,6 +44,10 @@ int main()
 	sf::Clock fireClock;
 	int fireRate = 150;
 
+	//-- Menu Debugging Clock to prevent multiple click registration --//
+	sf::Clock menuDebugClock;
+	menuDebugClock.restart();
+
 	//-- Player and Game Variables --//
 	int playerHealth = 100;
 	int playerBank = 0;
@@ -135,7 +139,25 @@ int main()
 	scoreText.setPosition(30, 60);
 	scoreText.setCharacterSize(40);
 
+	sf::Text gameOverText;
+	gameOverText.setFont(mainFont);
+	gameOverText.setString("Game Over");
+	gameOverText.setPosition(250, 150);
+	gameOverText.setCharacterSize(80);
 
+	sf::Text returnToMenuText;
+	returnToMenuText.setFont(mainFont);
+	returnToMenuText.setString("Main Menu");
+	returnToMenuText.setPosition(300, 250);
+	returnToMenuText.setCharacterSize(60);
+
+	sf::Text retryText;
+	retryText.setFont(mainFont);
+	retryText.setString("Retry");
+	retryText.setPosition(375, 340);
+	retryText.setCharacterSize(60);
+
+	gameState = 3;
 
 	//--------------------------//
 
@@ -207,8 +229,14 @@ int main()
 		if (startText.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 0)
 		{
 			startText.setColor(sf::Color::Yellow);
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && menuDebugClock.getElapsedTime().asMilliseconds() > 500)
 			{
+				enemyVector.clear();
+				projectileVector.clear();
+				playerHealth = 100;
+				playerBank = 0;
+				playerScore = 0;
+				menuDebugClock.restart();
 				gameState = 1;
 			}
 		}
@@ -232,7 +260,49 @@ int main()
 			highScoresText.setColor(sf::Color::White);
 		}
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (returnToMenuText.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 3)
+		{
+			returnToMenuText.setColor(sf::Color::Yellow);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				//-- Restart all variables and clear necessary memory --//
+				enemyVector.clear();
+				projectileVector.clear();
+				playerHealth = 100;
+				playerBank = 0;
+				playerScore = 0;
+				menuDebugClock.restart();
+				gameState = 0;
+			}
+		}
+
+		else
+		{
+			returnToMenuText.setColor(sf::Color::White);
+		}
+
+		if (retryText.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 3)
+		{
+			retryText.setColor(sf::Color::Yellow);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				//-- Restart all variables and clear necessary memory --//
+				enemyVector.clear();
+				projectileVector.clear();
+				playerHealth = 100;
+				playerBank = 0;
+				playerScore = 0;
+				menuDebugClock.restart();
+				gameState = 1;
+			}
+		}
+
+		else
+		{
+			retryText.setColor(sf::Color::White);
+		}
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && menuDebugClock.getElapsedTime().asMilliseconds() > 500)
 		{
 			//-- If the mouse button is pressed and the turret timer is ready add a new bullet to the projectile Vector --//
 
@@ -416,6 +486,13 @@ int main()
 			mainWindow.draw(titleText);
 			mainWindow.draw(startText);
 			mainWindow.draw(highScoresText);
+		}
+
+		else if (gameState == 3)
+		{
+			mainWindow.draw(gameOverText);
+			mainWindow.draw(returnToMenuText);
+			mainWindow.draw(retryText);
 		}
 
 		mainWindow.display();
