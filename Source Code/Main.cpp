@@ -185,6 +185,8 @@ int main()
 	buyHealth.setPosition(310, 250);
 	buyHealth.setCharacterSize(35);
 
+	bool purchaseEnable = true;
+
 	//--------------------------//
 
 	//-- Audio Section --//
@@ -238,6 +240,17 @@ int main()
 			gameState = 3;
 		}
 
+		//-- Update the game Difficulty after a certain score --//
+		if (playerScore > 150000)
+		{
+			difficultyMultiplier = 3;
+		}
+
+		if (playerScore > 300000)
+		{
+			difficultyMultiplier = 6;
+		}
+
 		//-- Event Methods --//
 		sf::Event event;
 		while (mainWindow.pollEvent(event))
@@ -258,6 +271,14 @@ int main()
 					{
 						gameState = 2;
 					}
+				}
+			}
+
+			if (event.type == sf::Event::MouseButtonReleased)
+			{
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					purchaseEnable = true;
 				}
 			}
 		}
@@ -343,7 +364,7 @@ int main()
 		if (buyFireRate.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 2)
 		{
 			buyFireRate.setColor(sf::Color::Yellow);
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && purchaseEnable)
 			{
 				//-- Improve the Firerate and Modify the playerBank --//
 				if (playerBank >= 600)
@@ -351,6 +372,8 @@ int main()
 					playerBank -= 600;
 					bankText.setString("Bank: " + itoa(playerBank));
 					fireRate += 100;
+
+					purchaseEnable = false;
 				}
 			}
 		}
@@ -363,7 +386,7 @@ int main()
 		if (buyArmor.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 2)
 		{
 			buyArmor.setColor(sf::Color::Yellow);
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && purchaseEnable)
 			{
 				//-- Improve the Firerate and Modify the playerBank --//
 				if (playerBank >= 1000 && playerArmor < 2)
@@ -371,6 +394,8 @@ int main()
 					playerBank -= 1000;
 					bankText.setString("Bank: " + itoa(playerBank));
 					playerArmor += 0.1;
+
+					purchaseEnable = false;
 				}
 			}
 		}
@@ -383,7 +408,7 @@ int main()
 		if (buyHealth.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 2)
 		{
 			buyHealth.setColor(sf::Color::Yellow);
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && purchaseEnable)
 			{
 				//-- Improve the Firerate and Modify the playerBank --//
 				if (playerBank >= 300 && playerHealth < 100)
@@ -396,6 +421,8 @@ int main()
 					{
 						playerHealth = 100;
 					}
+
+					purchaseEnable = false;
 				}
 			}
 		}
