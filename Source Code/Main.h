@@ -81,7 +81,7 @@ sf::Vector2f randomSpawnPos()
 }
 
 
-void randomEnemyType(enemy & spawnedEnemy)
+void randomEnemyType(enemy & spawnedEnemy, int & difficultyMultiplier)
 {
 	RandGen randGenerator;
 	int type = randGenerator.RandInt(10);
@@ -89,7 +89,7 @@ void randomEnemyType(enemy & spawnedEnemy)
 	//-- Green enemies are normal and have an average speed --//
 	if (type < 3)
 	{
-		spawnedEnemy.health = 2;
+		spawnedEnemy.health = 2 * difficultyMultiplier;
 		spawnedEnemy.render.setFillColor(sf::Color::Green);
 		spawnedEnemy.speed = 1.5;
 	}
@@ -97,7 +97,7 @@ void randomEnemyType(enemy & spawnedEnemy)
 	//-- Cyan enemies are slow but tanky --//
 	else if (type < 8)
 	{
-		spawnedEnemy.health = 3;
+		spawnedEnemy.health = 3 * difficultyMultiplier;
 		spawnedEnemy.render.setFillColor(sf::Color::Cyan);
 		spawnedEnemy.speed = 1;
 	}
@@ -105,7 +105,7 @@ void randomEnemyType(enemy & spawnedEnemy)
 	//-- Red enemies are fast but squishy --//
 	else
 	{
-		spawnedEnemy.health = 1;
+		spawnedEnemy.health = 1 * difficultyMultiplier;
 		spawnedEnemy.render.setFillColor(sf::Color::Red);
 		spawnedEnemy.speed = 3;
 	}

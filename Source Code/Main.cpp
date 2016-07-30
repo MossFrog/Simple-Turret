@@ -53,9 +53,12 @@ int main()
 	int playerBank = 0;
 	int playerDamage = 1;
 	int playerScore = 0;
+	double playerArmor = 1.0;
 
+	int difficultyMultiplier = 1;
 
 	int enemiesKilled = 0;
+	int enemySpawnRate;
 
 	int gameState = 0;
 
@@ -159,11 +162,28 @@ int main()
 
 	//-- Shop/Pause Variables --//
 	sf::RectangleShape shopRect;
-	shopRect.setSize(sf::Vector2f(600, 400));
+	shopRect.setSize(sf::Vector2f(600, 300));
 	shopRect.setOrigin(300, 200);
 	shopRect.setPosition(1024 / 2, 350);
 	shopRect.setFillColor(sf::Color::Black);
 
+	sf::Text buyFireRate;
+	buyFireRate.setFont(mainFont);
+	buyFireRate.setString("Upgrade Firerate: 600");
+	buyFireRate.setPosition(310, 200);
+	buyFireRate.setCharacterSize(35);
+
+	sf::Text buyArmor;
+	buyArmor.setFont(mainFont);
+	buyArmor.setString("Upgrade Armor: 1000");
+	buyArmor.setPosition(310, 300);
+	buyArmor.setCharacterSize(35);
+
+	sf::Text buyHealth;
+	buyHealth.setFont(mainFont);
+	buyHealth.setString("Heal: 300");
+	buyHealth.setPosition(310, 250);
+	buyHealth.setCharacterSize(35);
 
 	//--------------------------//
 
@@ -319,6 +339,72 @@ int main()
 			retryText.setColor(sf::Color::White);
 		}
 
+
+		if (buyFireRate.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 2)
+		{
+			buyFireRate.setColor(sf::Color::Yellow);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				//-- Improve the Firerate and Modify the playerBank --//
+				if (playerBank >= 600)
+				{
+					playerBank -= 600;
+					bankText.setString("Bank: " + itoa(playerBank));
+					fireRate += 100;
+				}
+			}
+		}
+
+		else
+		{
+			buyFireRate.setColor(sf::Color::White);
+		}
+
+		if (buyArmor.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 2)
+		{
+			buyArmor.setColor(sf::Color::Yellow);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				//-- Improve the Firerate and Modify the playerBank --//
+				if (playerBank >= 1000 && playerArmor < 2)
+				{
+					playerBank -= 1000;
+					bankText.setString("Bank: " + itoa(playerBank));
+					playerArmor += 0.1;
+				}
+			}
+		}
+
+		else
+		{
+			buyArmor.setColor(sf::Color::White);
+		}
+
+		if (buyHealth.getGlobalBounds().contains(mousePos.x, mousePos.y) && gameState == 2)
+		{
+			buyHealth.setColor(sf::Color::Yellow);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				//-- Improve the Firerate and Modify the playerBank --//
+				if (playerBank >= 300 && playerHealth < 100)
+				{
+					playerBank -= 300;
+					bankText.setString("Bank: " + itoa(playerBank));
+					playerHealth += 10;
+
+					if (playerHealth > 100)
+					{
+						playerHealth = 100;
+					}
+				}
+			}
+		}
+
+		else
+		{
+			buyHealth.setColor(sf::Color::White);
+		}
+
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && menuDebugClock.getElapsedTime().asMilliseconds() > 500)
 		{
 			//-- If the mouse button is pressed and the turret timer is ready add a new bullet to the projectile Vector --//
@@ -415,9 +501,14 @@ int main()
 			}
 		}
 
+		enemySpawnRate = 1500 - (enemiesKilled * 5);
+		if (enemySpawnRate < 100)
+		{
+			enemySpawnRate = 100;
+		}
 
 		//-- Spawn a new enemy --//
-		if ((enemySpawnClock.getElapsedTime().asMilliseconds() >= (1500 - (enemiesKilled * 3))) && gameState == 1)
+		if ((enemySpawnClock.getElapsedTime().asMilliseconds() >= enemySpawnRate) && gameState == 1)
 		{
 			enemy newEnemy;
 
@@ -425,7 +516,7 @@ int main()
 			newEnemy.render.setPosition(newEnemy.currentPos);
 			newEnemy.render.setRadius(15);
 
-			randomEnemyType(newEnemy);
+			randomEnemyType(newEnemy, difficultyMultiplier);
 
 			newEnemy.render.setOrigin(15, 15);
 
@@ -454,7 +545,7 @@ int main()
 				{
 					//-- In this case the enemy has reached the turret base, damage the player and remove the enemy --//
 					enemyVector.erase(enemyVector.begin() + i);
-					playerHealth -= 5;
+					playerHealth -= 5/playerArmor;
 
 					if (playerHealth <= 0)
 					{
@@ -515,6 +606,9 @@ int main()
 		else if (gameState == 2)
 		{
 			mainWindow.draw(shopRect);
+			mainWindow.draw(buyFireRate);
+			mainWindow.draw(buyHealth);
+			mainWindow.draw(buyArmor);
 		}
 
 		mainWindow.display();
