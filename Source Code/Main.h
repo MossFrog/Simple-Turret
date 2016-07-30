@@ -5,8 +5,10 @@
 #include <vector>
 #include <math.h>
 #include <cmath>
+#include <fstream>
 #include "randgen.h"
 #include "strutils.h"
+
 
 using namespace std;
 

@@ -157,7 +157,13 @@ int main()
 	retryText.setPosition(375, 340);
 	retryText.setCharacterSize(60);
 
-	gameState = 3;
+	//-- Shop/Pause Variables --//
+	sf::RectangleShape shopRect;
+	shopRect.setSize(sf::Vector2f(600, 400));
+	shopRect.setOrigin(300, 200);
+	shopRect.setPosition(1024 / 2, 350);
+	shopRect.setFillColor(sf::Color::Black);
+
 
 	//--------------------------//
 
@@ -221,7 +227,18 @@ int main()
 
 			if (event.type == sf::Event::KeyPressed)
 			{
-
+				if (event.key.code == sf::Keyboard::Space)
+				{
+					if (gameState == 2)
+					{
+						gameState = 1;
+					}
+					
+					else if (gameState == 1)
+					{
+						gameState = 2;
+					}
+				}
 			}
 		}
 
@@ -456,7 +473,7 @@ int main()
 
 		mainWindow.draw(backGroundSprite);
 
-		if (gameState == 1)
+		if (gameState == 1 || gameState == 2)
 		{
 			for (int i = 0; i < projectileVector.size(); i++)
 			{
@@ -488,11 +505,16 @@ int main()
 			mainWindow.draw(highScoresText);
 		}
 
-		else if (gameState == 3)
+		if (gameState == 3)
 		{
 			mainWindow.draw(gameOverText);
 			mainWindow.draw(returnToMenuText);
 			mainWindow.draw(retryText);
+		}
+
+		else if (gameState == 2)
+		{
+			mainWindow.draw(shopRect);
 		}
 
 		mainWindow.display();
